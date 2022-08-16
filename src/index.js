@@ -1,98 +1,68 @@
-class Vehicle {
-    constructor(field, x, y, length, direction, color, isAmbulance = false) {
-        this.x = x
-        this.y = y
+import { Vehicle } from './vehicle.js'
 
-        this.startX = 0
-        this.startY = 0
-        this.startTimestamp = 0
+const fieldEl = document.querySelector('.field')
 
-        this.el = document.createElement('div')
-        this.el.setAttribute(
-            'style',
-            `
-      width: calc(var(--cell-width) * ${
-          direction === 'horizontal' ? length : 1
-      });
-      height: calc(var(--cell-width) * ${
-          direction === 'horizontal' ? 1 : length
-      });
-      background-color: ${color};
-      position: absolute;
-      left: calc(var(--cell-width) * ${x});
-      top: calc(var(--cell-width) * ${y});
-      transition: left 0.2s, top 0.2s;
-    `,
+const NUMBER_OF_CELLS = 9
+
+const veiclesData = [
+    {
+        x: 0,
+        y: 4,
+        length: 3,
+        direction: 'horizontal',
+        color: 'red',
+    },
+    {
+        x: 0,
+        y: 0,
+        length: 4,
+        direction: 'vertical',
+        color: 'green',
+    },
+    {
+        x: 2,
+        y: 0,
+        length: 4,
+        direction: 'horizontal',
+        color: 'rebeccapurple',
+    },
+    {
+        x: 3,
+        y: 4,
+        length: 4,
+        direction: 'vertical',
+        color: 'orange',
+    },
+    {
+        x: 8,
+        y: 4,
+        length: 3,
+        direction: 'vertical',
+        color: 'yellow',
+    },
+]
+
+const doesPositionVectorsIntersect = (vector1, vector2) =>
+    vector1.some((v1) => vector2.some((v2) => v1.x === v2.x && v1.y === v2.y))
+
+const checkCanMove = (vehicleId, positionVector) => {
+    const otherVehicles = vehicles.filter(({ id }) => id !== vehicleId)
+    return !otherVehicles.some((vehicle) => {
+        const intersect = doesPositionVectorsIntersect(
+            vehicle.getPositionVector(),
+            positionVector,
         )
-        this.el.addEventListener('touchstart', (e) => {
-            e.preventDefault()
-            e.stopPropagation()
-            this.startX = e.touches[0].clientX
-            this.startY = e.touches[0].clientY
-            this.startTimestamp = e.timeStamp
-            console.log(e)
-        })
-        this.el.addEventListener('touchend', (e) => {
-            e.preventDefault()
-            e.stopPropagation()
-
-            const TOUCH_DURATION = 400
-            const MIN_MOVEMENT = 20
-            const NUMBER_OF_CELLS = 9
-
-            if (e.timeStamp - this.startTimestamp < TOUCH_DURATION) {
-                const xDelta = e.changedTouches[0].clientX - this.startX
-                const yDelta = e.changedTouches[0].clientY - this.startY
-                const isXMove =
-                    Math.abs(yDelta) < MIN_MOVEMENT &&
-                    Math.abs(xDelta) > MIN_MOVEMENT
-                const isYMove =
-                    Math.abs(xDelta) < MIN_MOVEMENT &&
-                    Math.abs(yDelta) > MIN_MOVEMENT
-
-                if (direction === 'horizontal' && isXMove) {
-                    const newX = Math.max(0, this.x + (xDelta > 0 ? 1 : -1))
-                    const isOutOfField = newX + length > NUMBER_OF_CELLS
-
-                    if (!isOutOfField || isAmbulance) {
-                        this.x = newX
-                    }
-
-                    this.move()
-
-                    if (isOutOfField && isAmbulance) {
-                        setTimeout(() => alert('you won'), 200)
-                    }
-                }
-
-                if (direction === 'vertical' && isYMove) {
-                    const newY = Math.max(0, this.y + (yDelta > 0 ? 1 : -1))
-                    const isOutOfField = newY + length > NUMBER_OF_CELLS
-
-                    if (!isOutOfField) {
-                        this.y = newY
-                        this.move()
-                    }
-                }
-            }
-
-            this.startX = 0
-            this.startY = 0
-            this.startTimestamp = 0
-            console.log(e)
-        })
-
-        field.appendChild(this.el)
-    }
-
-    move() {
-        this.el.style.left = `calc(var(--cell-width) * ${this.x})`
-        this.el.style.top = `calc(var(--cell-width) * ${this.y})`
-    }
+        return intersect
+    })
 }
 
-const field = document.querySelector('.field')
-
-const ambulance = new Vehicle(field, 0, 4, 2, 'horizontal', 'red', true)
-
-const vehicle1 = new Vehicle(field, 0, 0, 2, 'vertical', 'rebeccapurple', true)
+const vehicles = veiclesData.map(
+    (data, index) =>
+        new Vehicle({
+            fieldEl,
+            numberOfCells: NUMBER_OF_CELLS,
+            checkCanMove,
+            id: index,
+            ...data,
+        }),
+)

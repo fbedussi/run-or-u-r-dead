@@ -4,8 +4,8 @@
     "description": "js13kgames entry 2022",
     "main": "index.js",
     "scripts": {
-        "lint": "npx eslint ./",
-        "lint:fix": "npm run lint -- --fix",
+        "lint": "npx eslint src",
+        "lint:fix": "npm run lint src -- --fix",
         "prettier": "npx prettier ./ --check",
         "prettier:fix": "npm run prettier -- --write",
         "format": "npm run prettier:fix && npm run lint:fix",
