@@ -9,13 +9,16 @@
         "prettier": "npx prettier ./ --check",
         "prettier:fix": "npm run prettier -- --write",
         "format": "npm run prettier:fix && npm run lint:fix",
+        "build": "cp ./src/* ./public",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "author": "Francesco Bedussi",
     "license": "MIT",
+    "repository": "https://github.com/fbedussi/run-or-u-r-dead.git",
     "devDependencies": {
         "eslint": "^8.22.0",
         "eslint-config-prettier": "^8.5.0",
-        "prettier": "2.7.1"
+        "prettier": "2.7.1",
+        "firebase": "^9.9.2"
     }
 }

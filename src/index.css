@@ -1,0 +1,35 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --cell-width: 9vw;
+    --number-of-cells: 9;
+}
+
+html {
+    overflow: hidden;
+}
+
+body {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.field {
+    width: calc(var(--cell-width) * var(--number-of-cells));
+    aspect-ratio: 1;
+    border: solid 1px black;
+    background-color: #e5e5f7;
+    opacity: 0.8;
+    background-image: linear-gradient(#444cf7 1px, transparent 1px),
+        linear-gradient(to right, #444cf7 1px, #e5e5f7 1px);
+    background-size: var(--cell-width) var(--cell-width);
+    position: relative;
+}
