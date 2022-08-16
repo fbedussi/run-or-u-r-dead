@@ -1,0 +1,21 @@
+{
+    "name": "run-or-u-r-dead",
+    "version": "1.0.0",
+    "description": "js13kgames entry 2022",
+    "main": "index.js",
+    "scripts": {
+        "lint": "npx eslint ./",
+        "lint:fix": "npm run lint -- --fix",
+        "prettier": "npx prettier ./ --check",
+        "prettier:fix": "npm run prettier -- --write",
+        "format": "npm run prettier:fix && npm run lint:fix",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "Francesco Bedussi",
+    "license": "MIT",
+    "devDependencies": {
+        "eslint": "^8.22.0",
+        "eslint-config-prettier": "^8.5.0",
+        "prettier": "2.7.1"
+    }
+}

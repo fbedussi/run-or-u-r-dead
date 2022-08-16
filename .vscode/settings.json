@@ -1,0 +1,7 @@
+{
+    "prettier.requireConfig": true,
+    "editor.defaultFormatter": "SimonSiefke.prettier-vscode",
+    "[javascript]": {
+        "editor.defaultFormatter": "SimonSiefke.prettier-vscode"
+    }
+}
