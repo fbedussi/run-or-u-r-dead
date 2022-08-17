@@ -1,6 +1,3 @@
-const TOUCH_DURATION = 400
-const MIN_MOVEMENT = 20
-
 export class Vehicle {
     constructor({
         id,
@@ -8,34 +5,35 @@ export class Vehicle {
         x,
         y,
         length,
-        direction,
+        horizontal = true,
         color,
         numberOfCells,
         checkCanMove,
+        fixed = false,
     }) {
         this.id = id
         this.x = x
         this.y = y
         this.length = length
-        this.direction = direction
+        this.horizontal = horizontal
         this.checkCanMove = checkCanMove
-        
+        this.fixex = fixed
+
         const isAmbulance = id === 0
+
+        const MIN_MOVEMENT = Math.round(
+            (window.innerWidth * 0.9) / numberOfCells,
+        )
 
         this.startX = 0
         this.startY = 0
-        this.startTimestamp = 0
 
         this.el = document.createElement('div')
         this.el.setAttribute(
             'style',
             `
-      width: calc(var(--cell-width) * ${
-          direction === 'horizontal' ? length : 1
-      });
-      height: calc(var(--cell-width) * ${
-          direction === 'horizontal' ? 1 : length
-      });
+      width: calc(var(--cell-width) * ${horizontal ? length : 1});
+      height: calc(var(--cell-width) * ${horizontal ? 1 : length});
       background-color: ${color};
       position: absolute;
       left: calc(var(--cell-width) * ${x});
@@ -43,34 +41,36 @@ export class Vehicle {
       transition: left 0.2s, top 0.2s;
     `,
         )
+        fieldEl.appendChild(this.el)
+
+        if (this.fixed) {
+            return
+        }
+
         this.el.addEventListener('touchstart', (e) => {
             e.preventDefault()
             e.stopPropagation()
             this.startX = e.touches[0].clientX
             this.startY = e.touches[0].clientY
-            this.startTimestamp = e.timeStamp
         })
-        this.el.addEventListener('touchend', (e) => {
+        this.el.addEventListener('touchmove', (e) => {
             e.preventDefault()
             e.stopPropagation()
 
-            if (e.timeStamp - this.startTimestamp > TOUCH_DURATION) {
-                return
-            }
-
             const xDelta = e.changedTouches[0].clientX - this.startX
             const yDelta = e.changedTouches[0].clientY - this.startY
-            const isXMove =
-                Math.abs(yDelta) < MIN_MOVEMENT &&
-                Math.abs(xDelta) > MIN_MOVEMENT
-            const isYMove =
-                Math.abs(xDelta) < MIN_MOVEMENT &&
-                Math.abs(yDelta) > MIN_MOVEMENT
 
             let newX = this.x
             let newY = this.y
 
-            if (direction === 'horizontal' && isXMove) {
+            if (
+                (horizontal && Math.abs(xDelta) < MIN_MOVEMENT) ||
+                (!horizontal && Math.abs(yDelta) < MIN_MOVEMENT)
+            ) {
+                return
+            }
+
+            if (horizontal) {
                 newX = Math.max(0, this.x + (xDelta > 0 ? 1 : -1))
                 const isOutOfField = newX + length > numberOfCells
 
@@ -79,11 +79,10 @@ export class Vehicle {
                 }
 
                 if (isOutOfField && isAmbulance) {
+                    this.fixed = true
                     setTimeout(() => alert('you won'), 200)
                 }
-            }
-
-            if (direction === 'vertical' && isYMove) {
+            } else {
                 newY = Math.max(0, this.y + (yDelta > 0 ? 1 : -1))
                 const isOutOfField = newY + length > numberOfCells
 
@@ -100,12 +99,9 @@ export class Vehicle {
                 this.move(newX, newY)
             }
 
-            this.startX = 0
-            this.startY = 0
-            this.startTimestamp = 0
+            this.startX = e.changedTouches[0].clientX
+            this.startY = e.changedTouches[0].clientY
         })
-
-        fieldEl.appendChild(this.el)
     }
 
     move(newX, newY) {
@@ -119,7 +115,7 @@ export class Vehicle {
         const positionVector = new Array(this.length)
             .fill(undefined)
             .map((_, index) =>
-                this.direction === 'horizontal'
+                this.horizontal
                     ? { x: x + index, y: y }
                     : { x: x, y: y + index },
             )
