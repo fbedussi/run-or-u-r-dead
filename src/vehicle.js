@@ -7,9 +7,11 @@ export class Vehicle {
         length,
         horizontal = true,
         color,
+        type,
         numberOfCells,
         checkCanMove,
         fixed = false,
+        onWin,
     }) {
         this.id = id
         this.x = x
@@ -29,17 +31,41 @@ export class Vehicle {
         this.startY = 0
 
         this.el = document.createElement('div')
+
+        this.el.classList.add('vehicle', !horizontal ? 'vertical' : undefined)
+
         this.el.setAttribute(
             'style',
             `
-      width: calc(var(--cell-width) * ${horizontal ? length : 1});
-      height: calc(var(--cell-width) * ${horizontal ? 1 : length});
-      background-color: ${color};
-      position: absolute;
-      left: calc(var(--cell-width) * ${x});
-      top: calc(var(--cell-width) * ${y});
-      transition: left 0.2s, top 0.2s;
-    `,
+            width: calc(var(--cell-width) * ${length});
+            height: calc(var(--cell-width) * 1);
+            background-color: ${color || 'transparent'};
+            position: absolute;
+            left: calc(var(--cell-width) * ${x});
+            top: calc(var(--cell-width) * ${y});
+            transition: left 0.2s, top 0.2s;
+            image-rendering: pixelated;
+            background-image: url('./images/${type}.png');
+            background-size: 100% 100%;
+            image-rendering: pixelated;
+            
+            ${
+                !horizontal
+                    ? `
+                    transform: translateY(-100%) rotate(90deg);
+                    transform-origin: 0 100%;
+                `
+                    : ''
+            }
+            ${
+                type === 'obstacle'
+                    ? `
+                    background-repeat: repeat;
+                    background-size: auto 100%;
+                    `
+                    : ''
+            }
+            `,
         )
         fieldEl.appendChild(this.el)
 
@@ -78,9 +104,9 @@ export class Vehicle {
                     newX = this.x
                 }
 
-                if (isOutOfField && isAmbulance) {
+                if (isOutOfField && isAmbulance && !this.fixed) {
                     this.fixed = true
-                    setTimeout(() => alert('you won'), 200)
+                    setTimeout(onWin, 200)
                 }
             } else {
                 newY = Math.max(0, this.y + (yDelta > 0 ? 1 : -1))
