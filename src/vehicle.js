@@ -100,20 +100,20 @@ export class Vehicle {
                 newX = Math.max(0, this.x + (xDelta > 0 ? 1 : -1))
                 const isOutOfField = newX + length > numberOfCells
 
-                if (isOutOfField && !isAmbulance) {
+                if (isOutOfField) {
                     newX = this.x
-                }
-
-                if (isOutOfField && isAmbulance && !this.fixed) {
-                    this.fixed = true
-                    setTimeout(onWin, 200)
                 }
             } else {
                 newY = Math.max(0, this.y + (yDelta > 0 ? 1 : -1))
                 const isOutOfField = newY + length > numberOfCells
 
-                if (isOutOfField) {
+                if (isOutOfField && !isAmbulance) {
                     newY = this.y
+                }
+
+                if (isOutOfField && isAmbulance && !this.fixed) {
+                    this.fixed = true
+                    setTimeout(onWin, 200)
                 }
             }
 

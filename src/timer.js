@@ -31,9 +31,9 @@ export const startTimer = (seconds = 30, onEnd) => {
         }, 4000)
     }
 
-    // if (seconds > 0) {
-    //     setTimeout(() => {
-    //         startTimer(seconds - 1, onEnd)
-    //     }, 1000)
-    // }
+    if (seconds > 0) {
+        setTimeout(() => {
+            startTimer(seconds - 1, onEnd)
+        }, 1000)
+    }
 }

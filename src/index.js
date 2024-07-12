@@ -7,61 +7,60 @@ const NUMBER_OF_CELLS = 9
 
 const veiclesData = [
     {
-        x: 0,
-        y: 4,
-        length: 3,
-        type: 'ambulance',
-    },
-    {
-        x: 0,
+        x: 4,
         y: 0,
         length: 3,
+        type: 'ambulance',
         horizontal: false,
+    },
+    {
+        x: 6,
+        y: 0,
+        length: 3,
         type: 'bus',
     },
     {
-        x: 2,
+        x: 6,
         y: 2,
         length: 4,
         type: 'truck',
+        horizontal: false,
     },
     {
-        x: 4,
+        x: 3,
         y: 4,
         length: 2,
-        horizontal: false,
         type: 'taxi',
-    },
-    {
-        x: 8,
-        y: 4,
-        length: 4,
-        horizontal: false,
-        type: 'fire-truck',
-    },
-    {
-        x: 2,
-        y: 6,
-        length: 3,
-        fixed: true,
-        type: 'obstacle',
-    },
-    {
-        x: 2,
-        y: 7,
-        length: 3,
-        fixed: true,
-        type: 'obstacle',
     },
     {
         x: 2,
         y: 8,
+        length: 4,
+        type: 'fire-truck',
+    },
+    {
+        x: 0,
+        y: 2,
         length: 3,
         fixed: true,
         type: 'obstacle',
     },
     {
-        x: 7,
+        x: 0,
+        y: 3,
+        length: 3,
+        fixed: true,
+        type: 'obstacle',
+    },
+    {
+        x: 0,
+        y: 4,
+        length: 3,
+        fixed: true,
+        type: 'obstacle',
+    },
+    {
+        x: 0,
         y: 8,
         length: 2,
         fixed: true,
@@ -110,5 +109,3 @@ const start = () => {
 }
 
 startButtonEl.addEventListener('click', start)
-
-start()
